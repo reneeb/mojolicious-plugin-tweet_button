@@ -9,19 +9,21 @@ use Mojo::IOLoop;
 use Test::More;
 
 # Make sure sockets are working
-plan skip_all => 'working sockets required for this test!'
-  unless Mojo::IOLoop->new->generate_port;
 plan tests => 2;
 
 use Mojolicious::Lite;
-use Mojo::Client;
 use Test::Mojo;
 
 # Silence
 app->log->level('error');
 
 # Avoid exception template
-app->renderer->root(app->home->rel_dir('public'));
+if ( Mojolicious->VERSION >= 2.49 ) {
+    app->renderer->paths([ app->home->rel_dir('public') ]);
+}
+else {
+    app->renderer->root(app->home->rel_dir('public'));
+}
 
 plugin 'tweet_button';
 
@@ -44,17 +46,10 @@ __DATA__
 
 @@ index.html.ep
 <%= tweet_button =%>
-
 <%= tweet_button count => 'horizontal' =%>
-
 <%= tweet_button count => 'none' =%>
-
 <%= tweet_button text => 'Foo' =%>
-
 <%= tweet_button url => 'http://example.com' =%>
-
 <%= tweet_button lang => 'fr' =%>
-
 <%= tweet_button via => 'vtivti' =%>
-
 <%= tweet_button related => 'kraih:A good guy!' =%>
