@@ -7,12 +7,12 @@ use base 'Mojolicious::Plugin';
 
 use Mojo::ByteStream;
 
-our $VERSION = '0.0004';
+our $VERSION = '0.0005';
 
 sub register {
     my ($self, $app, $conf) = @_;
 
-    $conf ||= {};
+    $conf->{count} = 'vertical' if !$conf->{count};
 
     $app->renderer->add_helper(
         tweet_button => sub {
@@ -20,10 +20,10 @@ sub register {
             my %args = @_;
 
             $args{url}     ||= $conf->{url};
-            $args{count}   ||= $conf->{count} || 'vertical';
             $args{via}     ||= $conf->{via};
             $args{related} ||= $conf->{related};
             $args{lang}    ||= $conf->{lang};
+            $args{count}     = $conf->{count} if !$args{count};
 
             my $attrs = '';
             foreach my $name (qw/url text count via related lang/) {
