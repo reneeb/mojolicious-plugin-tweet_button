@@ -5,25 +5,13 @@ use warnings;
 
 #use utf8;
 
-use Mojo::IOLoop;
 use Test::More;
-
-# Make sure sockets are working
-plan tests => 2;
 
 use Mojolicious::Lite;
 use Test::Mojo;
 
 # Silence
 app->log->level('error');
-
-# Avoid exception template
-if ( Mojolicious->VERSION >= 2.49 ) {
-    app->renderer->paths([ app->home->rel_dir('public') ]);
-}
-else {
-    app->renderer->root(app->home->rel_dir('public'));
-}
 
 plugin 'tweet_button';
 
@@ -41,6 +29,8 @@ $t->get_ok('/')->content_is(<<'EOF');
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-via="vtivti">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-related="kraih:A good guy!">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 EOF
+
+done_testing();
 
 __DATA__
 
